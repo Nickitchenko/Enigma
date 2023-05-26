@@ -34,7 +34,7 @@ public class PlayerControler : MonoBehaviour
 	{
 		GameManager.gm.pc = this;
 	}
-
+	 
 	private void Start()
 	{
 		RefreshScale();
@@ -88,7 +88,8 @@ public class PlayerControler : MonoBehaviour
 				nearbyObjectRb.isKinematic = false;
 			}
 		}
-		///////////////
+
+		//ограничения д
 		Vector3 currentPosition = transform.position;
 
 		if (currentPosition.magnitude > maxDistanceFromOrigin)
@@ -96,6 +97,7 @@ public class PlayerControler : MonoBehaviour
 			Vector3 fromOriginToCurrent = currentPosition.normalized;
 			transform.position = fromOriginToCurrent * maxDistanceFromOrigin;
 		}
+
 	}
 
 	private void FixedUpdate()
