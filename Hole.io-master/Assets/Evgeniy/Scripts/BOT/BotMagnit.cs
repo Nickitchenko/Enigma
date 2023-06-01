@@ -11,17 +11,20 @@ public class BotMagnit : MonoBehaviour
     public int score;
     public int scoreToUpgrade;
 
-    public float scale;
+    public int LVL=1;
     public bool sizeUp;
 
     public GameObject objectToSizeUp;
     public BoxCollider colliderToSizeUp;
-
+    public BoxCollider detectionColliderToSizeUp;
 
     public Transform playerCanvas;
     public GameObject scoreIndicator;
 
-    private Vector3 targetPosition;
+    public Vector3 targetPosition;
+    public GameObject targetBot;
+    public bool MoveToBot=false;
+
     public float maxDistanceFromOrigin;
     public float speed;
 
@@ -32,18 +35,32 @@ public class BotMagnit : MonoBehaviour
 
     private void Update()
     {
-        transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
-        // Если достигли целевой позиции, генерируем новую случайную позицию
-        if (Vector3.Distance(transform.position, targetPosition) < 5f)
+        if (MoveToBot)
         {
-            targetPosition = GetRandomPosition();
+            if(targetBot!=null)
+            {
+                transform.position = Vector3.MoveTowards(transform.position, targetBot.transform.position, speed * Time.deltaTime);
+            }
+            else
+            {
+                MoveToBot = false;
+            }
         }
-        Vector3 currentPosition = transform.position;
-
-        if (currentPosition.magnitude > maxDistanceFromOrigin)
+        else
         {
-            Vector3 fromOriginToCurrent = currentPosition.normalized;
-            transform.position = fromOriginToCurrent * maxDistanceFromOrigin;
+            transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
+            // Если достигли целевой позиции, генерируем новую случайную позицию
+            if (Vector3.Distance(transform.position, targetPosition) < 5f)
+            {
+                targetPosition = GetRandomPosition();
+            }
+            Vector3 currentPosition = transform.position;
+
+            if (currentPosition.magnitude > maxDistanceFromOrigin)
+            {
+                Vector3 fromOriginToCurrent = currentPosition.normalized;
+                transform.position = fromOriginToCurrent * maxDistanceFromOrigin;
+            }
         }
     }
 
@@ -71,7 +88,7 @@ public class BotMagnit : MonoBehaviour
         }
     }
 
-    public void AddScore(int amount)
+    public void AddScore(int amount)    
     {
         score += amount;
         sizeUp = false;
@@ -104,6 +121,7 @@ public class BotMagnit : MonoBehaviour
     {
         if(score>=scoreToUpgrade)
         {
+            LVL++;
             score = 0;
             scoreToUpgrade += 10;
             UpdateSize();
@@ -117,10 +135,14 @@ public class BotMagnit : MonoBehaviour
 
     private void UpdateSize()
     {
+        maxDistanceFromOrigin=maxDistanceFromOrigin-0.5f;
         objectToSizeUp.transform.localScale=new Vector3(objectToSizeUp.transform.localScale.x + 0.25f, objectToSizeUp.transform.localScale.y, objectToSizeUp.transform.localScale.z + 0.25f);
         radius = objectToSizeUp.transform.localScale.x + 0.25f;
         float x = colliderToSizeUp.size.x;
         x =x+0.2f;
         colliderToSizeUp.size = new Vector3(x, colliderToSizeUp.size.y, x);
+        float d = detectionColliderToSizeUp.size.x;
+        d++;
+        detectionColliderToSizeUp.size = new Vector3(d, detectionColliderToSizeUp.size.y, d);
     }
 }

@@ -5,8 +5,8 @@ using TMPro;
 
 public class PlayerControler : MonoBehaviour
 {
-
 	public int score;
+	public int scoreToUpgrade = 10;
 	public float scale;
 	public float speed;
 	public float radius;
@@ -117,7 +117,7 @@ public class PlayerControler : MonoBehaviour
 	{
 		if (other.gameObject.layer == 10) // Victims fall into the hole
 		{
-			AddScore(1);
+			AddScore(other.gameObject.GetComponent<EnemyMagnit>().scoreAmount);
 		}
 	}
 
@@ -167,10 +167,12 @@ public class PlayerControler : MonoBehaviour
 
 	public void CheckSize()
 	{
-		if (!sizeUp && score % 10 == 0)
+		if (!sizeUp && score >=scoreToUpgrade)
 		{
 			sizeUp = true;
-			RefreshScale();			
+			score = 0;
+			scoreToUpgrade += 10;
+			RefreshScale();		
 		}
 	}
 

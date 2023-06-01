@@ -15,7 +15,9 @@ public class BotHeart : MonoBehaviour
     {
         StartTime = true;
     }
+
     public GameObject main;
+
     private void OnTriggerEnter(Collider other)
     {
         if(other.gameObject.CompareTag("Bot") && StartTime)
@@ -33,6 +35,17 @@ public class BotHeart : MonoBehaviour
             {
                 other.GetComponent<BotMagnit>().score = other.GetComponent<BotMagnit>().scoreToUpgrade;
                 other.GetComponent<BotMagnit>().CheckSize();
+                main.gameObject.GetComponent<BotMagnit>().Death();
+            }
+        }
+        if(other.gameObject.CompareTag("Player") && StartTime)
+        {
+            float myRadius = main.GetComponent<BotMagnit>().radius;
+            float enemyRadius = other.gameObject.GetComponent<PlayerControler>().radius;
+
+            if(myRadius<enemyRadius)
+            {
+                other.gameObject.GetComponent<PlayerControler>().AddScore(other.gameObject.GetComponent<PlayerControler>().scoreToUpgrade);
                 main.gameObject.GetComponent<BotMagnit>().Death();
             }
         }
